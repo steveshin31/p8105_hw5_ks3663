@@ -4,3 +4,22 @@ author: "Kee-Young Shin"
 date: "November 3, 2018"
 output: html_document
 ---
+
+```{r}
+library(tidyverse)
+library(purrr)
+
+```
+
+## Problem 1
+```{r}
+
+files_list = paste0("./data/", list.files("./data"))
+files_list
+
+output = map_dfr(files_list, read.csv)
+output
+
+
+```
+
