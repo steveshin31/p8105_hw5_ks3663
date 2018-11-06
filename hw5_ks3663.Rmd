@@ -17,9 +17,34 @@ library(purrr)
 files_list = paste0("./data/", list.files("./data"))
 files_list
 
-output = map_dfr(files_list, read.csv)
+output = map_df(files_list, read.csv) %>% 
+  add_column(files_list, .before = "week_1") %>% 
+  mutate(files_list = str_replace(files_list, "./data/", ""),
+         files_list = str_replace(files_list, ".csv", "")) %>% 
+  separate(files_list, into = c("Control Arm", "Subject ID"), sep = "_") %>% 
+  janitor::clean_names()
 output
 
+```
 
+```{r}
+
+# make spaghetti plot for control arm
+output %>% 
+  filter(control_arm == "con") %>% 
+  gather(key = week, value = observation, week_1:week_8) %>% 
+  arrange(subject_id) %>% 
+  group_by(subject_id) %>% 
+  ggplot(aes(x = week, y = observation, color = subject_id, group = subject_id)) + 
+    geom_line()
+
+# make spaghetti plot for experimental arm
+output %>% 
+  filter(control_arm == "exp") %>% 
+  gather(key = week, value = observation, week_1:week_8) %>% 
+  arrange(subject_id) %>% 
+  group_by(subject_id) %>% 
+  ggplot(aes(x = week, y = observation, color = subject_id, group = subject_id)) + 
+    geom_line()
 ```
 
