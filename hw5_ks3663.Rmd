@@ -8,6 +8,7 @@ output: html_document
 ```{r}
 library(tidyverse)
 library(purrr)
+library(RCurl)
 
 ```
 
@@ -46,5 +47,13 @@ output %>%
   group_by(subject_id) %>% 
   ggplot(aes(x = week, y = observation, color = subject_id, group = subject_id)) + 
     geom_line()
+```
+
+## Problem 2
+```{r}
+homicide_df = read.csv(text = getURL("https://raw.githubusercontent.com/washingtonpost/data-homicides/master/homicide-data.csv"))
+
+homicide_df
+                       
 ```
 
