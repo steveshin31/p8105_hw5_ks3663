@@ -29,6 +29,14 @@ output
 ```
 
 ```{r}
+# make spaghetti plot comparing both arms 
+output %>% 
+  gather(key = week, value = observation, week_1:week_8) %>% 
+  arrange(control_arm, subject_id) %>% 
+  group_by(subject_id) %>% 
+  ggplot(aes(x = week, y = observation, color = subject_id, group = subject_id)) + 
+    geom_line() + facet_wrap(~control_arm)
+
 
 # make spaghetti plot for control arm
 output %>% 
@@ -57,14 +65,15 @@ homicide_df = read.csv(text = getURL("https://raw.githubusercontent.com/washingt
 
 homicide_df_summarized = homicide_df %>% 
   group_by(city_state) %>% 
-  summarize(total_homicide = sum(disposition == "Closed by arrest"),
+  summarize(total_homicide = n(),
       unsolved_homicide = sum(disposition == "Closed without arrest") 
       + sum(disposition == "Open/No arrest"))
+
 homicide_df_summarized
+
 ```
 
 ```{r}
-
 
 ```
 
