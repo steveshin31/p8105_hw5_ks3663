@@ -35,26 +35,11 @@ output %>%
   arrange(control_arm, subject_id) %>% 
   group_by(subject_id) %>% 
   ggplot(aes(x = week, y = observation, color = subject_id, group = subject_id)) + 
-    geom_line() + facet_wrap(~control_arm)
+    geom_line() + 
+    facet_wrap(~control_arm) + 
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 
-# make spaghetti plot for control arm
-output %>% 
-  filter(control_arm == "con") %>% 
-  gather(key = week, value = observation, week_1:week_8) %>% 
-  arrange(subject_id) %>% 
-  group_by(subject_id) %>% 
-  ggplot(aes(x = week, y = observation, color = subject_id, group = subject_id)) + 
-    geom_line()
-
-# make spaghetti plot for experimental arm
-output %>% 
-  filter(control_arm == "exp") %>% 
-  gather(key = week, value = observation, week_1:week_8) %>% 
-  arrange(subject_id) %>% 
-  group_by(subject_id) %>% 
-  ggplot(aes(x = week, y = observation, color = subject_id, group = subject_id)) + 
-    geom_line()
 ```
 
 ## Problem 2
@@ -74,6 +59,24 @@ homicide_df_summarized
 ```
 
 ```{r}
+# run prop.test for Baltimore, MD
+prop.test(x = homicide_df_summarized %>% filter(city_state == "Baltimore, MD") %>% pull(unsolved_homicide), n = homicide_df_summarized %>% filter(city_state == "Baltimore, MD") %>%  pull(total_homicide))
+
+dfr <- data.frame(k=c(60,50,70,40),n=rep(500,4))
+Map(prop.test,x=dfr$k,n=dfr$n)
+
+prop_test_fuc = function(v) {
+  
+  t = prop.test(x = v %>% pull(unsolved_homicide), n = v %>% pull(total_homicide))
+  t
+  
+}
+
+homicide_df_summarized %>% 
+  filter(city_state == "Baltimore, MD") %>% 
+  prop_test_fuc()
+
+map2(.x = homicide_df_summarized %>% pull(unsolved_homicide), .y = homicide_df_summarized %>% pull(total_homicide), ~prop.test(x = .x, n = .y))
 
 ```
 
