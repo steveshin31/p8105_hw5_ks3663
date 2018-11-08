@@ -52,13 +52,19 @@ homicide_df = read.csv(text = getURL("https://raw.githubusercontent.com/washingt
   unite(city_state, city:state, sep = ", ") %>% 
   janitor::clean_names()
 
+homicide_df
+
+```
+
+The raw dataset contains `r nrow(homicide_df)` observations. 
+
+```{r}
 # create new data frame containing total homicide and unsolved homicide 
 homicide_df_summarized = homicide_df %>% 
   group_by(city_state) %>% 
   summarize(total_homicide = n(),
       unsolved_homicide = sum(disposition == "Closed without arrest") 
       + sum(disposition == "Open/No arrest"))
-
 ```
 
 ```{r}
