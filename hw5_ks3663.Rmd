@@ -41,20 +41,22 @@ output %>%
 
 
 ```
+When looking at the control group, there seems to be no apparent trend over time, fluctuating up and down. The experiment group, however, shows a clear patter: 
+
 
 ## Problem 2
 ```{r}
+# read in data and clean names 
 homicide_df = read.csv(text = getURL("https://raw.githubusercontent.com/washingtonpost/data-homicides/master/homicide-data.csv")) %>% 
   unite(city_state, city:state, sep = ", ") %>% 
   janitor::clean_names()
 
+# create new data frame containing total homicide and unsolved homicide 
 homicide_df_summarized = homicide_df %>% 
   group_by(city_state) %>% 
   summarize(total_homicide = n(),
       unsolved_homicide = sum(disposition == "Closed without arrest") 
       + sum(disposition == "Open/No arrest"))
-
-homicide_df_summarized
 
 ```
 
