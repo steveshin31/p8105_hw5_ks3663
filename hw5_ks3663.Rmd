@@ -82,13 +82,18 @@ prop_test_output = homicide_df_summarized %>%
   unnest() %>% 
   select(c("city_state", "estimate", "conf.low", "conf.high"))
   
-prop_test_output %>% 
-  filter(city_state == "Tampa, FL")
 ```
 
 ```{r}
-
-
+# create plot showing estimate for all city-states and their Confidence Intervals
+prop_test_output %>% 
+  mutate(city_state = as.factor(city_state),
+         city_state = fct_reorder(city_state, estimate)) %>% 
+  ggplot(aes(x = city_state, y = estimate)) + 
+    geom_point() +
+    geom_errorbar(ymin = prop_test_output$conf.low, 
+                  ymax = prop_test_output$conf.high) +
+    theme(axis.text.x = element_text(angle = 80, hjust = 1))
 
 ```
 
