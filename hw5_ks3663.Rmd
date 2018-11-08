@@ -2,7 +2,7 @@
 title: "p8105_hw5_ks3663"
 author: "Kee-Young Shin"
 date: "November 3, 2018"
-output: html_document
+output: github_document
 ---
 
 ```{r}
@@ -60,23 +60,19 @@ homicide_df_summarized
 
 ```{r}
 # run prop.test for Baltimore, MD
-prop.test(x = homicide_df_summarized %>% filter(city_state == "Baltimore, MD") %>% pull(unsolved_homicide), n = homicide_df_summarized %>% filter(city_state == "Baltimore, MD") %>%  pull(total_homicide))
+prop.test(x = homicide_df_summarized %>% filter(city_state == "Baltimore, MD") %>% pull(unsolved_homicide), n = homicide_df_summarized %>% filter(city_state == "Baltimore, MD") %>%  pull(total_homicide)) %>% 
+  broom::tidy()
 
-dfr <- data.frame(k=c(60,50,70,40),n=rep(500,4))
-Map(prop.test,x=dfr$k,n=dfr$n)
-
-prop_test_fuc = function(v) {
-  
-  t = prop.test(x = v %>% pull(unsolved_homicide), n = v %>% pull(total_homicide))
-  t
-  
-}
 
 homicide_df_summarized %>% 
   filter(city_state == "Baltimore, MD") %>% 
   prop_test_fuc()
 
-map2(.x = homicide_df_summarized %>% pull(unsolved_homicide), .y = homicide_df_summarized %>% pull(total_homicide), ~prop.test(x = .x, n = .y))
-
+output = map2(.x = homicide_df_summarized %>% pull(unsolved_homicide), 
+              .y = homicide_df_summarized %>% pull(total_homicide), 
+              ~prop.test(x = .x, n = .y)) %>% 
+  broom::tidy()
+  
+output
 ```
 
