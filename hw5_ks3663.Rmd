@@ -60,19 +60,35 @@ homicide_df_summarized
 
 ```{r}
 # run prop.test for Baltimore, MD
-prop.test(x = homicide_df_summarized %>% filter(city_state == "Baltimore, MD") %>% pull(unsolved_homicide), n = homicide_df_summarized %>% filter(city_state == "Baltimore, MD") %>%  pull(total_homicide)) %>% 
+baltimore_results = prop.test(x = homicide_df_summarized %>% filter(city_state == "Baltimore, MD") %>% pull(unsolved_homicide), n = homicide_df_summarized %>% filter(city_state == "Baltimore, MD") %>%  pull(total_homicide)) %>% 
   broom::tidy()
 
+# pull estimated proportion and confidence interval
+baltimore_results %>% 
+  select(estimate, conf.low, conf.high) 
 
-homicide_df_summarized %>% 
-  filter(city_state == "Baltimore, MD") %>% 
-  prop_test_fuc()
+```
 
-output = map2(.x = homicide_df_summarized %>% pull(unsolved_homicide), 
+```{r}
+# run prop.test on all city-states
+prop_test_output = homicide_df_summarized %>% 
+  group_by(city_state) %>% 
+  nest() %>% 
+  mutate(output = map2(.x = homicide_df_summarized %>% pull(unsolved_homicide), 
               .y = homicide_df_summarized %>% pull(total_homicide), 
-              ~prop.test(x = .x, n = .y)) %>% 
-  broom::tidy()
+              ~prop.test(x = .x, n = .y)),
+         output = map(output, broom::tidy)) %>% 
+  select(-data) %>% 
+  unnest() %>% 
+  select(c("city_state", "estimate", "conf.low", "conf.high"))
   
-output
+prop_test_output %>% 
+  filter(city_state == "Tampa, FL")
+```
+
+```{r}
+
+
+
 ```
 
