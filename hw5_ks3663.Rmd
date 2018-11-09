@@ -52,11 +52,22 @@ homicide_df = read.csv(text = getURL("https://raw.githubusercontent.com/washingt
   unite(city_state, city:state, sep = ", ") %>% 
   janitor::clean_names()
 
-homicide_df
-
+homicide_df %>% 
+  group_by(victim_race) %>% 
+  summarize(count = n())
+homicide_df %>% 
+  mutate(victim_age = as.numeric(victim_age)) %>% 
+  summarize(avg = mean(victim_age))
+homicide_df %>% 
+  group_by(victim_sex) %>% 
+  summarize(count = n())
+homicide_df %>% 
+  group_by(city_state) %>% 
+  summarize(count = n()) %>% 
+  arrange(-count)
 ```
 
-The raw dataset contains `r nrow(homicide_df)` observations. 
+The raw dataset contains `r nrow(homicide_df)` homicides committed in 50 large U.S. cities. The race of the victims that were most commonly murdered were black with 33361 homicides, while the least targeted race were Asians with 685. The average age of the victims in this dataset were 33.3, indicating that many were middle aged. The majority of the victims were male with a total count of 40739 males compared to 7209 females. Chicago, IL had the most homicides in this dataset with a count of 5535. Lastly, there is a recorded observation of 1 homicide for Tulsa AL. This outlier is most likely an error made during the creation of this dataset, since it seems Tulsa is not a real city in AL. 
 
 ```{r}
 # create new data frame containing total homicide and unsolved homicide 
