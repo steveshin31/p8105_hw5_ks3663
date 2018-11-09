@@ -117,3 +117,4 @@ prop_test_output %>%
 
 ```
 
+Chicago, IL had the highest proportion of unsolved homicide, while Richmond, VA had the lowest. The cities with narrower confidence intervals indicate that their respective homicide counts are relatively larger than those with larger confidence intervals. Tulsa, AL, which was an outlier and an error in the dataset, had a very large confidence interval since its homicide count was only 1. 
